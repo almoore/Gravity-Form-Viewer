@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Gravity Form Viewer</title>
+
+		<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="style.css" rel="stylesheet">
+
+	</head>
+	<body ng-app="hr-jobs"  ng-controller="JobsCtrl" style="">
+
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container-fluid">
+
+
+
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">
+						Syntactics
+					</a>
+				</div>
+
+	
+				<div class="collapse navbar-collapse">
+				
+					<form class="navbar-form navbar-left">
+
+						<div class="input-group">
+							<input type="number" ng-disabled="!isFormReady" size="4" ng-model="page" min="1" class="form-control page-navigator"/>
+
+							<div class="btn-group input-group-btn" role="group">
+								<button ng-disabled="!isFormReady || page==1" type="button" class="btn btn-default" ng-click="prev()">Prev</button>
+								<button ng-disabled="!isFormReady || (page>=Math.floor(totalEntries/perPage)+1)" type="button" class="btn btn-default" ng-click="next()">Next</button>
+								<button ng-disabled="!isFormReady" type="button" class="btn btn-primary" ng-click="refresh()">Refresh</button>
+							</div>
+
+						</div>
+						
+					</form>
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a href="" data-toggle="modal" data-target="#configModal">Config</a>
+						</li>
+						<li>
+							<a href="" data-toggle="modal" ng-click="showAbout()">About</a>
+						</li>
+						
+					</ul>
+					<p ng-show="isLoadingEntries" class="navbar-text">Loading...</p>
+
+
+				</div>
+
+
+
+
+			</div>
+		</nav>
+
+
+		<div class="container-fluid" ng-show="isFormReady">
+			<h3>{{formTitle}}</h3>
+			<p>
+				Page {{page}} of {{totalEntries!==0?Math.floor(totalEntries/perPage)+1:''}}
+			</p>
+			<table class="table table-bordered">
+				<tr>
+					<th>Date/Time</th>
+					<th ng-repeat="f in fields" ng-if="allowedType(f.type)">{{f.label}}</th>
+					<th></th>
+				</tr>
+				<tr ng-repeat="r in entries">
+					<td>{{r.date_created | dateToISO | date:'medium'}}</td>
+
+					<td ng-repeat="(i,f) in fields" ng-if="allowedType(f.type)">
+						<div ng-if="f.type=='text' || f.type=='phone' || f.type=='name'">{{r[i]}}</div>
+						<div ng-if="f.type=='email'"><a href="" ng-click="copy('Email',r[i])">{{r[i]}}</a></div>
+						<div ng-if="f.type=='fileupload'"><a rel="external" ng-show="validateUrl(r[i])" href="" ng-click="copy('Download URL',r[i])">Download</a></div>
+						<div ng-if="f.type=='address'">{{r[i+'.1']}}</div>
+						<div ng-if="f.type=='address'">{{r[i+'.2']}}</div>
+						<div ng-if="f.type=='address'">{{r[i+'.3']}}</div>
+						<div ng-if="f.type=='address'">{{r[i+'.4']}}</div>
+						<div ng-if="f.type=='address'">{{r[i+'.5']}}</div>
+						<div ng-if="f.type=='address'">{{r[i+'.6']}}</div>
+					</td>
+					<td><button class="btn btn-primary" ng-click="loadEntryDetails(r)" data-toggle="modal" data-target="#entryModal">View</button></td>
+				</tr>
+			</table>
+		</div>
+
+
+		<!-- Modals -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="configModal" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+
+					<div class="modal-body">
+						<div class="form-group">
+							<label >Public Key</label>
+							<input type="text" class="form-control" ng-model="config.publicKey">
+							<span class="help-block">Gravity Forms API Public Key</span>
+						</div>
+						<div class="form-group">
+							<label>Private Key</label>
+							<input type="text" class="form-control" ng-model="config.privateKey">
+							<span class="help-block">Gravity Forms API Private Key</span>
+						</div>
+						<div class="form-group">
+							<label>Base URL</label>
+							<input type="text" class="form-control" ng-model="config.baseUrl">
+							<span class="help-block">Website URL</span>
+						</div>
+						<div class="form-group">
+							<label>Form ID</label>
+							<input type="text" class="form-control" ng-model="config.formId">
+							<span class="help-block">Application Form ID</span>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" tabindex="-1" role="dialog" id="entryModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<div class="modal-body">
+						<table class="table table-bordered">
+							<tr ng-repeat="(i,f) in fields" ng-if="allowedType(f.type)">
+								<th>{{f.label}}</th>
+
+								<td ng-if="f.type=='text' || f.type=='phone' || f.type=='name'">{{entryDetails[i]}}</td>
+								<td ng-if="f.type=='email'"><a href="" ng-click="copy('Email',entryDetails[i])">{{entryDetails[i]}}</a></td>
+								<td ng-if="f.type=='fileupload'"><a rel="external" ng-show="validateUrl(entryDetails[i])" href="" ng-click="copy('Download URL',entryDetails[i])">Download</a></td>
+								<td ng-if="f.type=='address'">
+									<div ng-if="f.type=='address'">{{entryDetails[i+'.1']}}</div>
+									<div ng-if="f.type=='address'">{{entryDetails[i+'.2']}}</div>
+									<div ng-if="f.type=='address'">{{entryDetails[i+'.3']}}</div>
+									<div ng-if="f.type=='address'">{{entryDetails[i+'.4']}}</div>
+									<div ng-if="f.type=='address'">{{entryDetails[i+'.5']}}</div>
+									<div ng-if="f.type=='address'">{{entryDetails[i+'.6']}}</div>
+								</td>
+
+							</tr>
+						</table>
+
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="bower_components/cryptojslib/rollups/hmac-sha1.js"></script>
+		<script src="bower_components/cryptojslib/components/enc-base64-min.js"></script>
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="bower_components/bootbox/bootbox.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="bower_components/angular/angular.min.js"></script>
+		<script src="script.js"></script>
+	</body>
+</html>
