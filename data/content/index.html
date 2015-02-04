@@ -25,7 +25,7 @@
 					<form class="navbar-form navbar-left">
 
 						<div class="input-group">
-							<input type="number" ng-disabled="!isFormReady" size="4" ng-model="page" min="1" class="form-control page-navigator"/>
+							<input type="number" ng-disabled="!isFormReady" size="4" ng-model="page" min="1" max="{{Math.floor(totalEntries/perPage)+1}}" class="form-control page-navigator"/>
 
 							<div class="btn-group input-group-btn" role="group">
 								<button ng-disabled="!isFormReady || page==1" type="button" class="btn btn-default" ng-click="prev()">Prev</button>
