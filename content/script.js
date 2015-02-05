@@ -48,7 +48,7 @@ angular.module('hr-jobs',[])
 	$scope.formTitle = '';
 	$scope.initialize = function(){
 		
-
+		
 		$scope.getFormData();
 		
 	}
@@ -58,6 +58,9 @@ angular.module('hr-jobs',[])
 		return allowed.indexOf(field)>=0;
 	}
 	$scope.getFormData = function(){
+
+		if(!GravityConfig.getPublicKey() || !GravityConfig.getPrivateKey()) return;
+
 		$scope.isFormReady = false;
 		$scope.formTitle = '';
 		var url = generateUrl('forms/'+GravityConfig.getFormId(),'GET');
@@ -78,7 +81,7 @@ angular.module('hr-jobs',[])
 			}
 		})
 		.error(function(){
-			bootbox.alert('Something went wrong');
+			bootbox.alert('Unable to load from data');
 		});
 
 	}
@@ -116,6 +119,9 @@ angular.module('hr-jobs',[])
 	}
 
 	$scope.getEntries = function(){
+
+		if(!GravityConfig.getPublicKey() || !GravityConfig.getPrivateKey()) return;
+
 		if($scope.isLoadingEntries) return;
 		$scope.isLoadingEntries = true;
 		var url = generateUrl('forms/'+GravityConfig.getFormId()+'/entries','GET');
@@ -135,7 +141,7 @@ angular.module('hr-jobs',[])
 			$scope.isFormReady = true;
 		})
 		.error(function(){
-			bootbox.alert('Something went wrong');
+			bootbox.alert('Unable to get entries');
 			$scope.isLoadingEntries = false;
 		});
 	}
@@ -149,6 +155,10 @@ angular.module('hr-jobs',[])
 	*/
 
 	$scope.loadEntryDetails = function(item){
+
+
+		if(!GravityConfig.getPublicKey() || !GravityConfig.getPrivateKey()) return;
+
 		$scope.entryDetails = {
 		};
 
@@ -161,7 +171,7 @@ angular.module('hr-jobs',[])
 			}
 		})
 		.error(function(){
-			bootbox.alert('Something went wrong');
+			bootbox.alert('Unable to load entry details');
 		});
 		
 	}
@@ -234,8 +244,6 @@ angular.module('hr-jobs',[])
 		$textarea.remove(); 
 
 	}
-
-	$scope.copy
 
 	$scope.copy = function(name,url){
 
