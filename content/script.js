@@ -47,9 +47,13 @@ angular.module('hr-jobs',[])
 	$scope.fields = {};
 	$scope.formTitle = '';
 	$scope.initialize = function(){
+		if(!GravityConfig.getPublicKey() || !GravityConfig.getPrivateKey()){
+			angular.element('#configModal').modal('show');
+		}else{
+			$scope.getFormData();
+		}
 		
 		
-		$scope.getFormData();
 		
 	}
 	$scope.allowedType = function(field){
