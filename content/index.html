@@ -62,10 +62,11 @@
 			<p>
 				Page {{page}} of {{totalEntries!==0?Math.floor(totalEntries/perPage)+1:''}}
 			</p>
-			<table class="table table-bordered">
+			<table class="table table-bordered table-condensed">
 				<tr>
 					<th>Date/Time</th>
 					<th ng-repeat="f in fields" ng-if="allowedType(f.type)">{{f.label}}</th>
+					<th>Notes</th>
 					<th></th>
 				</tr>
 				<tr ng-repeat="r in entries">
@@ -82,7 +83,12 @@
 						<div ng-if="f.type=='address'">{{r[i+'.5']}}</div>
 						<div ng-if="f.type=='address'">{{r[i+'.6']}}</div>
 					</td>
-					<td><button class="btn btn-primary" ng-click="loadEntryDetails(r)" data-toggle="modal" data-target="#entryModal">View</button></td>
+					<td>{{r.note}}</td>
+					<td>
+
+						<button class="btn btn-default btn-xs btn-block" ng-click="loadEntryDetails(r)" data-toggle="modal" data-target="#entryModal">View</button>
+						<button type="button" ng-click="updateNote(r)" class="btn btn-default btn-xs btn-block">Update Note</button>
+					</td>
 				</tr>
 			</table>
 		</div>

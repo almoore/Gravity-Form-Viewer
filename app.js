@@ -1,7 +1,6 @@
 var app = module.exports = require('appjs');
 var path = require('path');
 
-
 app.serveFilesFrom(__dirname + '/content');
 
 app.init({

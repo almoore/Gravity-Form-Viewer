@@ -32,6 +32,19 @@ angular.module('hr-jobs',[])
 	}
 } )
 
+
+.factory('Notes',function(){
+
+	return {
+		set:function(entryId,note){
+			localStorage.setItem('note-'+entryId,note);
+
+		},
+		get:function(entryId){
+			return localStorage.getItem('note-'+entryId) || '';
+		}
+	};
+})
 .filter('dateToISO', function() {
 	return function(input) {
 		input = new Date(input).toISOString();
@@ -39,7 +52,7 @@ angular.module('hr-jobs',[])
 	};
 })
 
-.controller('JobsCtrl',function($scope,$http,GravityConfig){
+.controller('JobsCtrl',function($scope,$http,GravityConfig,Notes){
 	/**
 		Form
 	*/
@@ -137,7 +150,9 @@ angular.module('hr-jobs',[])
 				$scope.entries.length = 0;
 				$scope.totalEntries = 0
 				angular.forEach(data.response.entries,function(d){
+					d.note = Notes.get(d.id);
 					$scope.entries.push(d);
+					
 				});
 				$scope.totalEntries = data.response.total_count;
 			}
@@ -157,7 +172,22 @@ angular.module('hr-jobs',[])
 	/**
 		Entry Details
 	*/
+	$scope.updateNote = function(item){
+		bootbox.prompt({
+			title:'Update note',
+			value:item.note,
+			callback:function(d){
+				if(d!==null){
+					$scope.$apply(function(){
+						Notes.set(item.id,d);
+						item.note = d;
+					});
+				}
 
+			}
+		});
+		
+	}
 	$scope.loadEntryDetails = function(item){
 
 
