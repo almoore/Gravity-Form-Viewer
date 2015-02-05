@@ -70,18 +70,18 @@ var trayMenu = app.createMenu([{
     window.close();
   }
 }]);
-
+/**
 var statusIcon = app.createStatusIcon({
   icon:'./data/content/icons/32.png',
   tooltip:'AppJS Hello World',
   menu:trayMenu
 });
-
+*/
 var window = app.createWindow({
   width  : 1024,
   height : 768,
   disableSecurity:true,
-  icons  : __dirname + '/content/icons'
+  //icons  : __dirname + '/content/icons'
 });
 
 window.on('create', function(){

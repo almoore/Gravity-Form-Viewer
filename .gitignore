@@ -1,3 +1,5 @@
 node_modules
+!node-standalone
+node-standalone/*
 content/bower_components
 storage
