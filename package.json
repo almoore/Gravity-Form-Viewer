@@ -1,0 +1,24 @@
+{
+  "name": "GravityFormViewer",
+  "version": "0.0.0",
+  "description": "App to view gravity form entries from your desktop",
+  "main": "app.js",
+  "dependencies": {
+    "appjs": "^0.0.20",
+    "appjs-darwin": "^0.0.19"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/djaney/Gravity-Form-Viewer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djaney/Gravity-Form-Viewer/issues"
+  },
+  "homepage": "https://github.com/djaney/Gravity-Form-Viewer"
+}

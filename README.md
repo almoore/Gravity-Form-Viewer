@@ -1,8 +1,6 @@
-Installation
-------------
-Bower install inside data/content
-
-Non-Mac
--------
-For non mac users, download AppJS for your platform copy the app.js and content directory to it.
-You may have to create your own launcher based from app.sh
+# Gravity Form Viewer
+View your Gravity Form entries without loggin in to WordPress
+## Installation
+1. **npm update**
+1. **bower update** inside content directory
+1. If node does not work get a stand-alone copy and put it inside **node-standalone** directory. (get it from AppJs' distributables)
